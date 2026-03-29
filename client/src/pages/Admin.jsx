@@ -240,10 +240,10 @@ export default function Admin() {
                         <tr key={s._id} className="hover:bg-gray-50">
                           <td className="px-4 py-3 text-gray-400">{i + 1}</td>
                           <td className="px-4 py-3"><p className="font-medium">{s.user?.name || 'Unknown'}</p><p className="text-gray-400 text-xs">{s.user?.email}</p></td>
-                          <td className="px-4 py-3 font-semibold text-primary">{s.plan}</td>
-                          <td className="px-4 py-3">{s.pagesAllowed}</td>
-                          <td className="px-4 py-3">{s.pagesUsed}</td>
-                          <td className="px-4 py-3">{s.pagesAllowed - s.pagesUsed}</td>
+                          <td className="px-4 py-3 text-gray-700 dark:text-gray-300 font-semibold text-primary">{s.plan}</td>
+                          <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{s.pagesAllowed}</td>
+                          <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{s.pagesUsed}</td>
+                          <td className="px-4 py-3 text-gray-700 dark:text-gray-300 font-medium">{s.pagesAllowed - s.pagesUsed}</td>
                           <td className="px-4 py-3 text-xs text-gray-500">{new Date(s.startDate).toLocaleDateString('en-IN')}</td>
                           <td className="px-4 py-3 text-xs text-gray-500">{new Date(s.endDate).toLocaleDateString('en-IN')}</td>
                           <td className="px-4 py-3">
@@ -281,9 +281,9 @@ export default function Admin() {
                     {users.map((u, i) => (
                       <tr key={u._id} className="hover:bg-gray-50">
                         <td className="px-4 py-3 text-gray-400">{i + 1}</td>
-                        <td className="px-4 py-3 font-medium">{u.name}</td>
-                        <td className="px-4 py-3 text-gray-600">{u.email}</td>
-                        <td className="px-4 py-3">{u.orderCount}</td>
+                        <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{u.name}</td>
+                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{u.email}</td>
+                        <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{u.orderCount}</td>
                         <td className="px-4 py-3">
                           {u.activeSub
                             ? <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-semibold">{u.activeSub.plan}</span>

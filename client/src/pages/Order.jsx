@@ -29,7 +29,9 @@ export default function Order() {
   const [upiId, setUpiId] = useState('')
   const [deliveryDate, setDeliveryDate] = useState('')
   const [deliveryTime, setDeliveryTime] = useState('')
+  const [orderSuccess, setOrderSuccess] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const MERCHANT_UPI = "itshitanshu@okaxis" // Change this to your actual UPI ID
 
   async function handleFile(e) {
     const file = e.target.files[0]
@@ -95,8 +97,48 @@ export default function Order() {
     formData.append('colourPages', printType === 'mixed' ? pageTypes.filter(t => t === 'colour').length : printType === 'colour' ? detectedPages : 0)
     const res = await fetch('/api/orders', { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: formData })
     const data = await res.json()
-    alert(res.ok ? 'Order placed successfully!' : data.message)
+    if (res.ok) {
+      setOrderSuccess(true)
+    } else {
+      alert(data.message)
+    }
     setSubmitting(false)
+  }
+
+  if (orderSuccess) {
+    const upiUrl = `upi://pay?pa=${MERCHANT_UPI}&pn=StudentPrint&am=${price.total.toFixed(2)}&cu=INR&tn=StudentPrint%20Order`
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`
+    
+    return (
+      <section className="py-20 bg-white dark:bg-gray-800 flex items-center justify-center min-h-[80vh]">
+        <div className="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center border dark:border-gray-600">
+          <div className="mb-6">
+            <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="fas fa-check text-2xl text-green-600 dark:text-green-400"></i>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Order Placed!</h2>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Please complete the payment below</p>
+          </div>
+
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl mb-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Amount to Pay</p>
+            <p className="text-3xl font-extrabold text-primary">₹{price.total.toFixed(2)}</p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-inner inline-block mb-6 border">
+            <img src={qrUrl} alt="UPI QR Code" className="w-48 h-48 mx-auto" />
+          </div>
+
+          <p className="text-xs text-gray-400 mb-6 px-4 italic leading-relaxed">
+            Scan using PhonePe, GPay, Paytm or any UPI app to pay <span className="font-bold">₹{price.total.toFixed(2)}</span>.
+          </p>
+
+          <button onClick={() => window.location.reload()} className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
+             Done & Back to Site
+          </button>
+        </div>
+      </section>
+    )
   }
 
   const inputCls = 'w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-primary focus:border-primary'

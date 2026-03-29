@@ -12,6 +12,13 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/studentpri
 
 app.use(cors());
 app.use(express.json());
+
+// Log requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  next();
+});
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB connection
@@ -263,10 +270,10 @@ app.delete('/api/admin/users/:id', adminAuth, async (req, res) => {
   res.json({ message: 'User deleted successfully' });
 });
 
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
